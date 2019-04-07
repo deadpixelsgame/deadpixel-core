@@ -14,13 +14,14 @@ public class Player : MonoBehaviour
     private Animator _animator;
     private BoxCollider2D _feetCollider;
 
-    private bool _canJump = true; 
-    
+    private bool _canJump; 
     private bool _canDoubleJump;
+    
     private static readonly int Running = Animator.StringToHash("Running");
 
     public void Start()
     {
+        ResetJump();
         _body = GetComponent<Rigidbody2D>();
         _feetCollider = GetComponent<BoxCollider2D>();
         _animator = GetComponent<Animator>();
@@ -33,21 +34,6 @@ public class Player : MonoBehaviour
         Run();
         Jump();
         FlipSprite();
-    }
-
-    private void OnCollisionEnter2D(Collision2D other)
-    {
-        // Collision with ground
-        if (other.GetContact(0).normal == Vector2.up)
-        {
-            ResetJump();
-        }
-        
-        // Collision with wall
-        else if (other.GetContact(0).normal == Vector2.right)
-        {
-            ResetJump();
-        }
     }
 
     private void ResetJump()
@@ -63,25 +49,29 @@ public class Player : MonoBehaviour
         _body.velocity = new Vector2(movementVelocity, _body.velocity.y);
     }
     
-    private void Jump()
+    private void OnCollisionEnter2D(Collision2D other)
     {
         if (_feetCollider.IsTouchingLayers(LayerMask.GetMask("Ground"))) ResetJump();
+    }
+    
+    private void Jump()
+    {
         if (!Input.GetButtonDown("Jump")) return;
         
         if (_canJump)
-        {      
-            _body.AddForce(new Vector2(_body.velocity.x, jumpSpeed), ForceMode2D.Impulse);
+        {
             _canJump = false;
             _canDoubleJump = true;
+            _body.AddForce(new Vector2(_body.velocity.x, jumpSpeed), ForceMode2D.Impulse);
         }
         else if(_canDoubleJump)
         {
+            _canJump = false;
+            _canDoubleJump = false;
+            
             // Reset the current velocity
             _body.velocity = Vector2.zero;
             _body.AddForce(new Vector2(_body.velocity.x, doubleJumpSpeed), ForceMode2D.Impulse);
-
-            _canJump = false;
-            _canDoubleJump = false;
         }
     }
 
