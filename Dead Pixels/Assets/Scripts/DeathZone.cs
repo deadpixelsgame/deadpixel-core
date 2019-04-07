@@ -9,10 +9,9 @@ public class DeathZone : MonoBehaviour
     
     private void OnCollisionEnter2D(Collision2D other)
     {
-        Debug.Log("Death Zone");
         if (other.gameObject.Equals(_player.gameObject))
         {
-            _player.ResetPlayer();
+           _player.ResetPlayer();
         }
     }
 }

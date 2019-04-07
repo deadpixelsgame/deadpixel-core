@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Player : MonoBehaviour
 {
@@ -9,11 +10,13 @@ public class Player : MonoBehaviour
     public float jumpSpeed = 28f;
     
     public float doubleJumpSpeed = 80f;
-
+    
     private Rigidbody2D _body;
     private Animator _animator;
     private BoxCollider2D _feetCollider;
 
+    private UnityEvent _jumpEvent;
+    
     private bool _canJump; 
     private bool _canDoubleJump;
     
@@ -68,7 +71,9 @@ public class Player : MonoBehaviour
         {
             _canJump = false;
             _canDoubleJump = false;
-            
+
+            _jumpEvent?.Invoke();
+
             // Reset the current velocity
             _body.velocity = Vector2.zero;
             _body.AddForce(new Vector2(_body.velocity.x, doubleJumpSpeed), ForceMode2D.Impulse);
@@ -86,6 +91,11 @@ public class Player : MonoBehaviour
 
     public void ResetPlayer()
     {
-        transform.position = new Vector3(-7, 4);
+        transform.localPosition = new Vector3(-7, 4);
+    }
+
+    public void SetJumpEvent(UnityEvent jumpEvent)
+    {
+        _jumpEvent = jumpEvent;
     }
 }
