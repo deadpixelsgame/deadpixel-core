@@ -75,7 +75,7 @@ public class Player : MonoBehaviour
             _jumpEvent?.Invoke();
 
             // Reset the current velocity
-            _body.velocity = Vector2.zero;
+            _body.velocity = new Vector2(_body.velocity.x, 0f);
             _body.AddForce(new Vector2(_body.velocity.x, doubleJumpSpeed), ForceMode2D.Impulse);
         }
     }
