@@ -1,6 +1,5 @@
 ﻿using System;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class Player : MonoBehaviour
 {
@@ -12,10 +11,8 @@ public class Player : MonoBehaviour
     public float doubleJumpSpeed = 80f;
 
     private Rigidbody2D _body;
-    private Light _light;
     private Animator _animator;
     private BoxCollider2D _feetCollider;
-    private Color _color;
 
     private bool _canJump = true; 
     
@@ -24,8 +21,6 @@ public class Player : MonoBehaviour
 
     public void Start()
     {
-        _light = GetComponent<Light>();
-        _color = _light.color;
         _body = GetComponent<Rigidbody2D>();
         _feetCollider = GetComponent<BoxCollider2D>();
         _animator = GetComponent<Animator>();
@@ -38,25 +33,6 @@ public class Player : MonoBehaviour
         Run();
         Jump();
         FlipSprite();
-        Flicker();
-    }
-
-    private void Flicker()
-    {
-        _light.color = _color * Wave();
-    }
-
-    private static float Wave() { 
-        const float amplitude = 0.2f;
-        const float frequency = 0.01f;
-        const float phase = 0.4f;
-        const float baseStart = 0.5f;
-        
-        var x = (Time.time + phase) * frequency;
-        x = x - Mathf.Floor(x);
-        var y = 1f - Random.value * 2;
-           
-        return y * amplitude + baseStart;    
     }
 
     private void OnCollisionEnter2D(Collision2D other)
@@ -120,7 +96,6 @@ public class Player : MonoBehaviour
 
     public void ResetPlayer()
     {
-        
         transform.position = new Vector3(-7, 4);
     }
 }

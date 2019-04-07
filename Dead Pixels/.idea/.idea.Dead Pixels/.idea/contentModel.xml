@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
+    <e p="C:\Users\chris\.Rider2018.3\config\scratches" t="IncludeRecursive" />
     <e p="C:\Users\chris\.Rider2018.3\system\extResources" t="IncludeRecursive" />
     <e p="C:\Users\chris\.Rider2018.3\system\resharper-host\local\Transient\ReSharperHost\v183\SolutionCaches\_Dead Pixels.-1474644605.00" t="ExcludeRecursive" />
     <e p="D:\deadpixels\deadpixel-core\Dead Pixels" t="IncludeRecursive">
@@ -9,6 +10,7 @@
         <e p="Scripts" t="Include">
           <e p="DeathZone.cs" t="Include" />
           <e p="Player.cs" t="Include" />
+          <e p="PlayerLight.cs" t="Include" />
           <e p="SimpleCamera.cs" t="Include" />
         </e>
       </e>
