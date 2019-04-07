@@ -8,6 +8,7 @@
       <e p="Assets" t="Include">
         <e p="Scripts" t="Include">
           <e p="Player.cs" t="Include" />
+          <e p="SimpleCamera.cs" t="Include" />
         </e>
       </e>
       <e p="Dead Pixels.sln" t="IncludeFlat" />
