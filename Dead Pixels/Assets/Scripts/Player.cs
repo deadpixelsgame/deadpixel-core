@@ -11,7 +11,7 @@ public class Player : MonoBehaviour
     
     public float doubleJumpSpeed = 80f;
     
-    private Rigidbody2D _body;
+    public Rigidbody2D _body;
     private Animator _animator;
     private BoxCollider2D _feetCollider;
 

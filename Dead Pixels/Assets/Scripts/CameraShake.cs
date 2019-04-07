@@ -5,6 +5,8 @@ public class CameraShake : MonoBehaviour
     // Transform of the camera to shake. Grabs the gameObject's transform
     // if null.
     private Transform camTransform;
+
+    public FollowPlayer followPlayer;
 	
     // How long the object should shake for.
     public float shakeDuration = 0f;
@@ -26,7 +28,7 @@ public class CameraShake : MonoBehaviour
     public void Shake()
     {
         shakeDuration = 0.2f;
-    }
+    } 
 	
     public void OnEnable()
     {
@@ -37,12 +39,14 @@ public class CameraShake : MonoBehaviour
     {
         if (shakeDuration > 0)
         {
+            followPlayer.enabled = true;
             camTransform.localPosition = originalPos + Random.insideUnitSphere * shakeAmount;
 			
             shakeDuration -= Time.deltaTime * decreaseFactor;
         }
         else
         {
+            followPlayer.enabled = false;
             shakeDuration = 0f;
             camTransform.localPosition = originalPos;
         }
