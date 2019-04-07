@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,6 +11,11 @@ public class FollowPlayer : MonoBehaviour
     private void OnEnable()
     {
         _movement = _player._body.velocity;
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        foreach (Renderer renderer in renderers)
+        {
+            renderer.material.color = Color.red;
+        }
     }
 
     private float MaxAlpha(Renderer[] renderers)
@@ -30,21 +35,18 @@ public class FollowPlayer : MonoBehaviour
 
         float alphaValue = MaxAlpha(rendererObjects);
 
-        while (alphaValue >= 0f)
-        {
-            alphaValue += Time.deltaTime * - 0.1f;
+        alphaValue += Time.deltaTime * - 0.01f;
 
-            for (int i = 0; i < rendererObjects.Length; i++)
+        for (int i = 0; i < rendererObjects.Length; i++)
+        {
+            Color start = rendererObjects[i].material.color;
+            Color end = new Color(start.r, start.g, start.b, 0.0f);
+            for (float t = 0.0f; t < 0.2f; t += Time.deltaTime)
             {
-                Color newColor = rendererObjects[i].material.color;
-                newColor.a = Mathf.Min(newColor.a, alphaValue);
-                newColor.a = Mathf.Clamp(newColor.a, 0.0f, 1.0f);
-                rendererObjects[i].material.color = newColor;
-                print(newColor.a);
+                rendererObjects[i].material.color = Color.Lerp(start, end, t / 0.2f);
+                yield return null;
             }
         }
-        
-        yield return new WaitForSeconds(0.1f);
     }
 
     public void LateUpdate ()
@@ -58,6 +60,6 @@ public class FollowPlayer : MonoBehaviour
                                      _movement.normalized.y * (i + 1) / 2);
         }
 
-//        StartCoroutine(nameof(FadeOut));
+        StartCoroutine(nameof(FadeOut));
     }
 }
