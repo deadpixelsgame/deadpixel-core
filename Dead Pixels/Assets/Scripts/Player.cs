@@ -15,6 +15,7 @@ public class Player : MonoBehaviour
     public float doubleJumpSpeed = 80f;
 
     private Rigidbody2D _body;
+    private BoxCollider2D _feetCollider;
     
     private Animator _animator;
 
@@ -26,6 +27,7 @@ public class Player : MonoBehaviour
     public void Start()
     {
         _body = GetComponent<Rigidbody2D>();
+        _feetCollider = GetComponent<BoxCollider2D>();
         _animator = GetComponent<Animator>();
     }
     
@@ -36,21 +38,6 @@ public class Player : MonoBehaviour
         Run();
         Jump();
         FlipSprite();
-    }
-
-    private void OnCollisionEnter2D(Collision2D other)
-    {
-        // Collision with ground
-        if (other.GetContact(0).normal == Vector2.up)
-        {
-            ResetJump();
-        }
-        
-        // Collision with wall
-        else if (other.GetContact(0).normal == Vector2.right)
-        {
-            ResetJump();
-        }
     }
 
     private void ResetJump()
@@ -68,6 +55,7 @@ public class Player : MonoBehaviour
     
     private void Jump()
     {
+        if (_feetCollider.IsTouchingLayers(LayerMask.GetMask("Ground"))) ResetJump();
         if (!Input.GetButtonDown("Jump")) return;
         
         if (_canJump)
