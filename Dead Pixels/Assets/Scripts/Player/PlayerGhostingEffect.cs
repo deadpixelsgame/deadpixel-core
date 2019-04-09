@@ -39,12 +39,13 @@ public class PlayerGhostingEffect : MonoBehaviour
             var childRenderer = _renderer[i];
             
             child.transform.position = _position - new Vector2(
-                                                           _movement.normalized.x * (i + 0.1f) / 2, 
-                                                           _movement.normalized.y * (i + 0.1f) / 2);
+                                                           _movement.normalized.x * (i + 0.4f) / 2, 
+                                                           _movement.normalized.y * (i + 0.4f) / 2);
 
             StartCoroutine(FadeOut(childRenderer, ghostCount, i, .2f));
         }   
     }
+    
     private IEnumerator FadeOut(Renderer renderer, int total, int index, float fadeOutDuration)
     {
         var time = 0.0f;
