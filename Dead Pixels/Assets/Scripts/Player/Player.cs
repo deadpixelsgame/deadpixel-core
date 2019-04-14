@@ -1,6 +1,6 @@
 ﻿using System;
+using JetBrains.Annotations;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class Player : MonoBehaviour
 {
@@ -16,11 +16,10 @@ public class Player : MonoBehaviour
 
     public bool alwaysRun;
 
-    public Rigidbody2D _body;
+    private Rigidbody2D _body;
     private Animator _animator;
     private BoxCollider2D _feetCollider;
 
-    private UnityEvent _jumpEvent;
 
     private float _dashTime;
     private Vector2 _dashDirection = Vector2.zero;
@@ -29,6 +28,8 @@ public class Player : MonoBehaviour
     private bool _canDash = true;
 
     private static readonly int Running = Animator.StringToHash("Running");
+
+    public Rigidbody2D Body => _body;
 
     public void Start()
     {
@@ -95,7 +96,7 @@ public class Player : MonoBehaviour
             {
                 if (_canDash)
                 {
-                    _jumpEvent?.Invoke();
+                    GameEventManager.TriggerEvent("Dash");
                 }
                 
                 _dashTime -= Time.fixedDeltaTime;
@@ -124,15 +125,15 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D other)
+    private void OnCollisionEnter2D()
     {
         if (_feetCollider.IsTouchingLayers(LayerMask.GetMask("Ground"))) ResetJump();
     }
 
 
-    private void OnCollisionStay2D(Collision2D other)
+    private void OnCollisionStay2D()
     {
-        if (_feetCollider.IsTouchingLayers(LayerMask.GetMask("Ground"))) ResetJump();
+        if (_feetCollider.IsTouchingLayers(LayerMask.GetMask("Ground"))) _canDash = true;
     }
 
 
@@ -169,10 +170,5 @@ public class Player : MonoBehaviour
     public void ResetPlayer()
     {
         transform.localPosition = new Vector3(-7, 4);
-    }
-
-    public void SetJumpEvent(UnityEvent jumpEvent)
-    {
-        _jumpEvent = jumpEvent;
     }
 }

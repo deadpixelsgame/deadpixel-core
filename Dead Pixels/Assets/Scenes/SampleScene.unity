@@ -258,7 +258,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1503920951}
-  - {fileID: 566251442}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -362,7 +361,9 @@ MonoBehaviour:
   movementSpeed: 8
   jumpSpeed: 28
   doubleJumpSpeed: 20
-  _body: {fileID: 0}
+  dashSpeed: 10
+  dashTime: 0.1
+  alwaysRun: 0
 --- !u!61 &176917283
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -372,7 +373,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 176917275}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 961e29b5f08874ed1b3eebf2bb6959a9, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -498,7 +499,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cb9ff2d79a2817449df308fa2c0889b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerGhostingEffect: {fileID: 566251443}
   shakeDuration: 0
   shakeAmount: 0.15
   decreaseFactor: 1
@@ -1345,15 +1345,6 @@ Tilemap:
       m_TileFlags: 1
       m_ColliderType: 1
   - first: {x: -4, y: -3, z: 0}
-    second:
-      m_TileIndex: 1
-      m_TileSpriteIndex: 1
-      m_TileMatrixIndex: 0
-      m_TileColorIndex: 0
-      m_ObjectToInstantiate: {fileID: 0}
-      m_TileFlags: 1
-      m_ColliderType: 1
-  - first: {x: -3, y: -3, z: 0}
     second:
       m_TileIndex: 1
       m_TileSpriteIndex: 1
@@ -4903,7 +4894,7 @@ Tilemap:
   m_TileAssetArray:
   - m_RefCount: 5
     m_Data: {fileID: 11400000, guid: 89789354b89188349a9205f30f64e9ad, type: 2}
-  - m_RefCount: 194
+  - m_RefCount: 193
     m_Data: {fileID: 11400000, guid: 10040149318832747a5a67e0d61a2c44, type: 2}
   - m_RefCount: 33
     m_Data: {fileID: 11400000, guid: a7d5418aa19ba5640afae7fcbb008fee, type: 2}
@@ -4938,7 +4929,7 @@ Tilemap:
   m_TileSpriteArray:
   - m_RefCount: 5
     m_Data: {fileID: 21300010, guid: ee8c9308c6de0da4ea9572bd42faf776, type: 3}
-  - m_RefCount: 194
+  - m_RefCount: 193
     m_Data: {fileID: 21300006, guid: ee8c9308c6de0da4ea9572bd42faf776, type: 3}
   - m_RefCount: 33
     m_Data: {fileID: 21300024, guid: ee8c9308c6de0da4ea9572bd42faf776, type: 3}
@@ -4971,7 +4962,7 @@ Tilemap:
   - m_RefCount: 6
     m_Data: {fileID: 21300058, guid: c2f1b32dde49de546a804bb2210cbaa8, type: 3}
   m_TileMatrixArray:
-  - m_RefCount: 479
+  - m_RefCount: 478
     m_Data:
       e00: 1
       e01: 0
@@ -5008,7 +4999,7 @@ Tilemap:
       e32: 0
       e33: NaN
   m_TileColorArray:
-  - m_RefCount: 479
+  - m_RefCount: 478
     m_Data: {r: 1, g: 1, b: 1, a: 1}
   m_AnimationFrameRate: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -5058,14 +5049,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 566251441}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.1612218}
+  m_LocalPosition: {x: -7, y: 4, z: -0.8387782}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1015947505}
   - {fileID: 1817921250}
   - {fileID: 830371920}
-  m_Father: {fileID: 176917277}
-  m_RootOrder: 1
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &566251443
 MonoBehaviour:
@@ -5080,6 +5071,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 176917281}
+  distanceBetweenGhosts: 0.4
+  fadeOutDuration: 0.3
 --- !u!1 &830371919
 GameObject:
   m_ObjectHideFlags: 0
@@ -5712,6 +5705,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1617233020}
   - component: {fileID: 1617233019}
+  - component: {fileID: 1617233021}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -5731,8 +5725,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f7bb09759e0333478b4ac7bf3e4b5ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _player: {fileID: 176917281}
-  _camera: {fileID: 519420033}
+  gameEventManager: {fileID: 1617233021}
 --- !u!4 &1617233020
 Transform:
   m_ObjectHideFlags: 0
@@ -5745,8 +5738,20 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1617233021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1617233018}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6e9979a6a564d93bf65b314543767ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1636790424
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 
 public class CameraShake : MonoBehaviour
 {
@@ -6,8 +7,6 @@ public class CameraShake : MonoBehaviour
     // if null.
     private Transform camTransform;
 
-    public PlayerGhostingEffect playerGhostingEffect;
-	
     // How long the object should shake for.
     public float shakeDuration = 0f;
 	
@@ -19,6 +18,8 @@ public class CameraShake : MonoBehaviour
 	
     public void Awake()
     {
+        GameEventManager.StartListening("Dash", Shake);
+        
         if (camTransform == null)
         {
             camTransform = GetComponent(typeof(Transform)) as Transform;
@@ -39,9 +40,7 @@ public class CameraShake : MonoBehaviour
     {
         if (shakeDuration > 0)
         {
-            playerGhostingEffect.RenderGhosts();
             camTransform.localPosition = originalPos + Random.insideUnitSphere * shakeAmount;
-			
             shakeDuration -= Time.deltaTime * decreaseFactor;
         }
         else

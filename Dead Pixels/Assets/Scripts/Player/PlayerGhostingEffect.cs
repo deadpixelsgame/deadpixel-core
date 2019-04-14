@@ -8,12 +8,16 @@ public class PlayerGhostingEffect : MonoBehaviour
     private static readonly Color StartColor = new Color(1.0f, 1.0f, 1.0f,1.0f);
     private static readonly Color EndColor = new Color(1.0f, 1.0f, 1.0f,0.0f);
     
-    private Vector2 _movement;
+    private Vector2 _velocity;
     private Vector2 _position;
     private Renderer[] _renderer;
+    
     private bool _ghostDisplayed;
 
-    public void Start()
+    public float distanceBetweenGhosts = 0.4f;
+    public float fadeOutDuration = 0.3f;
+
+    public void Awake()
     {
         _renderer = GetComponentsInChildren<Renderer>();
 
@@ -21,15 +25,14 @@ public class PlayerGhostingEffect : MonoBehaviour
         {
             renderer.material.color = Color.clear;
         }
+        
+        GameEventManager.StartListening("Dash", RenderGhosts);
     }
     
     public void RenderGhosts()
-    {
-        if (_ghostDisplayed) return;
-        
-        _ghostDisplayed = true;        
-        _movement = player._body.velocity;
-        _position = player._body.position;
+    {   
+        _velocity = player.Body.velocity;
+        _position = player.Body.position;
         
         var ghostCount = transform.childCount;
         
@@ -39,25 +42,23 @@ public class PlayerGhostingEffect : MonoBehaviour
             var childRenderer = _renderer[i];
             
             child.transform.position = _position - new Vector2(
-                                                           _movement.normalized.x * (i + 0.4f) / 2, 
-                                                           _movement.normalized.y * (i + 0.4f) / 2);
+                                                           _velocity.normalized.x / ghostCount * (i * distanceBetweenGhosts), 
+                                                           _velocity.normalized.y / ghostCount * (i * distanceBetweenGhosts));
 
-            StartCoroutine(FadeOut(childRenderer, ghostCount, i, .2f));
+            StartCoroutine(FadeOut(childRenderer, ghostCount, i, fadeOutDuration));
         }   
     }
     
-    private IEnumerator FadeOut(Renderer renderer, int total, int index, float fadeOutDuration)
+    private IEnumerator FadeOut(Renderer renderer, int total, int ghostIndex, float fadeOutDuration)
     {
         var time = 0.0f;
         var rate = 1.0f / fadeOutDuration;
         
         while (time < 1.0f) {
             time += Time.deltaTime * rate;
-            renderer.material.color = Color.Lerp(StartColor * 1 / total * (total - index + 1) , EndColor, time);
+            renderer.material.color = Color.Lerp(StartColor * 1 / total * (total - ghostIndex + 1) , EndColor, time);
             
             yield return null;
         }
-
-        _ghostDisplayed = false;
     }
 }
